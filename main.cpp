@@ -24,7 +24,7 @@ int main( int argc, char** argv )
 {
 
 	unsigned char data[SIZE];
-    unsigned int raw[640*480],min_depth=2047,min_x,min_y;
+        unsigned int raw[640*480],min_depth=2047,min_x,min_y;
 
 	FILE *camera,*fo;
 	camera=fopen("/dev/video0", "rb");
@@ -56,20 +56,14 @@ while(1){
     	}
     }
 
-    printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth);
-
-
+        printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth);
+	
 	createAlphaMat(mat,raw);
-
 	vector<int> compression_params;
 	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 	compression_params.push_back(10);
 	sprintf(uptimeInfo, "%ld.png", uptime);
 	imwrite(uptimeInfo, mat, compression_params);
-
-
-
-
 }
 
 
@@ -102,47 +96,24 @@ void createAlphaMat(Mat &mat ,unsigned int* val)
 
 
 unsigned int get_raw(unsigned int raw[],unsigned char tmp[]) {
-
-
-
+	
 	int k,index;
-
-
 	index=0;
 	k=0;
-
 	for (k=0x240+1;k<384000;k=k+5){
-
-
 		raw[index+0]=tmp[k+0]<<2;
 		raw[index+0]=raw[index+0]|(tmp[k+1]>>6);
-/*
-if(raw[index+0]<min && raw[index+0]>0)
-			min=raw[index+0];
-*/
 		raw[index+1]=(tmp[k+1]&0b00111111)<<4;
 		raw[index+1]=raw[index+1]|(tmp[k+2]>>4);
-//		if(raw[index+1]<min && raw[index+1]>0)
-//					min=raw[index+1];
-
 		raw[index+2]=(tmp[k+2]&0b00001111)<<6;
 		raw[index+2]=raw[index+2]|(tmp[k+3]>>2);
-//		if(raw[index+2]<min && raw[index+2]>0)
-//					min=raw[index+2];
-
 		raw[index+3]=(tmp[k+3]&0b00000011)<<8;
 		raw[index+3]=raw[index+3]|tmp[k+4];
-//		if(raw[index+3]<min && raw[index+3]>0)
-//					min=raw[index+3];
-
 		index=index+4;
-
 	}
-
-
-
-
 	return 0;
+
+	
 }
 
 
