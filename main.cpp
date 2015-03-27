@@ -30,7 +30,7 @@ int main( int argc, char** argv )
 	camera=fopen("/dev/video0", "rb");
 
 
-	//Mat mat(480, 640, CV_8UC4);
+	Mat mat(480, 640, CV_8UC4);
 while(1){
 
 	sysinfo(&sys_info);
@@ -59,7 +59,7 @@ while(1){
     printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth);
 
 
-/*	createAlphaMat(mat,raw);
+	createAlphaMat(mat,raw);
 
 	vector<int> compression_params;
 	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
@@ -67,7 +67,7 @@ while(1){
 	sprintf(uptimeInfo, "%ld.png", uptime);
 	imwrite(uptimeInfo, mat, compression_params);
 
-*/
+
 
 
 }
