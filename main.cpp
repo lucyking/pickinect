@@ -1,5 +1,4 @@
 #include <opencv2/opencv.hpp>
-
 #include <vector>
 #include <stdio.h>
 #include <sys/sysinfo.h>
@@ -17,38 +16,35 @@ char uptimeInfo[15];
 unsigned long uptime;
 
 void createAlphaMat(Mat &mat ,unsigned int* val);
-unsigned int get_raw(unsigned int raw[],unsigned char tmp[]);
+unsigned int get_raw(unsigned int raw[],unsigned char tmp[]);   // calculate the raw Y10B value to RGB(black&&white)
 
 
 int main( int argc, char** argv )
 {
 
-	unsigned char data[SIZE];
-        unsigned int raw[640*480],min_depth=2047,min_x,min_y;
+	unsigned char data[SIZE];                               //date store the Y10B raw data 
+        unsigned int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
 
-	FILE *camera,*fo;
+	FILE *camera;//*fo;   //fo is used to store the raw Y10B data,if you need the raw Y10B data,uncomment the codes about fo
 	camera=fopen("/dev/video0", "rb");
+	Mat mat(480, 640, CV_8UC4);               //  cv::Mat to store RGB picture
 
 
-	Mat mat(480, 640, CV_8UC4);
-while(1){
-
-	sysinfo(&sys_info);
+while(1){                                         //infinite loop to get depth frames from kinect
+	
+        sysinfo(&sys_info);                       //use uptime strings as picture name
 	unsigned long uptime = sys_info.uptime;
 	sprintf(uptimeInfo, "%ld", uptime);
-
-//	fo=fopen(uptimeInfo,"wb");
-
-
-    fread(data, sizeof(data[0]), SIZE, camera);
+ 
+ //	fo=fopen(uptimeInfo,"wb");    //fo is used to record the raw depth data from kinect
+        fread(data, sizeof(data[0]), SIZE, camera);  // read raw Y10B data from kinect
  //   fwrite(data, sizeof(data[0]), SIZE, fo);
-
  //   fclose(fo);
-    get_raw(raw,data);
+        get_raw(raw,data);    // trans Y10B to RGB
 
 
-    min_depth=2047;
-    for(i=0+640*4+5;i<640*480-640;i++){
+        min_depth=2047;                            // get the closest point 
+        for(i=0+640*4+5;i<640*480-640;i++){
     	if(raw[i]<min_depth){
     		min_depth=raw[i];
     	    min_x=i/640;
@@ -56,9 +52,9 @@ while(1){
     	}
     }
 
-        printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth);
+        printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth); 
 	
-	createAlphaMat(mat,raw);
+	createAlphaMat(mat,raw);                    // write the RGB picture to the filesystem 
 	vector<int> compression_params;
 	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 	compression_params.push_back(10);
@@ -74,12 +70,12 @@ while(1){
 
 
 
-void createAlphaMat(Mat &mat ,unsigned int* val)
+void createAlphaMat(Mat &mat ,unsigned int* val) //assign the RGB value to corresponding pixel of picture
 {   int k=0+68+5;
 	unsigned int pixel;
 	for (int i = 0; i < mat.rows; i++) {
 		for (int j = 0; j < mat.cols; j++) {
-			pixel=val[k]/4;
+			pixel=val[k]/4;        // 2^10 >> 255  , so value/4 
 			Vec4b& rgba = mat.at<Vec4b>(i, j);
 			rgba[0] = pixel;
 			rgba[1] = pixel;
@@ -95,7 +91,7 @@ void createAlphaMat(Mat &mat ,unsigned int* val)
 
 
 
-unsigned int get_raw(unsigned int raw[],unsigned char tmp[]) {
+unsigned int get_raw(unsigned int raw[],unsigned char tmp[]) {    // trans Y10B to RGB value
 	
 	int k,index;
 	index=0;
