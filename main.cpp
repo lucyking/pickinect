@@ -27,7 +27,7 @@ int main( int argc, char** argv )
 
 	FILE *camera;//*fo;                               //fo is used to store the raw Y10B data,if you need the raw Y10B data,uncomment the codes about fo
 	camera=fopen("/dev/video0", "rb");
-	Mat mat(480, 640, CV_8UC4);                       //  cv::Mat to store RGB picture
+	Mat mat(480, 640, CV_8UC3);                       //  cv::Mat to store RGB picture
 
 
 	while(1){                                         //infinite loop to get depth frames from kinect
@@ -46,18 +46,37 @@ int main( int argc, char** argv )
 		get_raw(raw,data);                         // trans Y10B to RGB
 
 
-		min_depth=2047;                            // get the closest point 
-		for(i=0+640*4+5;i<640*480-640;i++){
-			if(raw[i]<min_depth){
+		min_depth=2047;                            // get the closest point
+		min_x=0,min_y=0;
+		for(i=0+640*5+5;i<640*480-640;i++){
+			if(raw[i]> 100 && raw[i]<min_depth){
 				min_depth=raw[i];
 				min_x=i/640;
 				min_y=i%640;
 			}
 		}
 
+
+		int point = min_x*640+min_y;
+		for(i=0+640*5+5;i<640*480-640;i++){
+			// draw x
+			if(abs(i-point)<25){
+				raw[i]=0;
+			}
+
+			// draw y
+			if( (point-i)%640==0 && abs((point-i)/640)<25){
+				raw[i]=0;
+			}
+		}
+
+
 		printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth); 
 
-		createAlphaMat(mat,raw);                    // write the RGB picture to the filesystem 
+		createAlphaMat(mat,raw);                    // write the RGB picture to the filesystem
+//		putText(mat, "kkk", Point(min_y, min_x), 1, 0.5, Scalar::all(255), 1, 7, true);
+		sprintf(uptimeInfo,"<%d,%d>",min_y,min_x);
+		putText(mat, uptimeInfo, Point(min_y-50, min_x+15), 1, 2, Scalar::all(50), 1, 2, false);
 		vector<int> compression_params;
 		compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 		compression_params.push_back(10);
@@ -79,11 +98,11 @@ void createAlphaMat(Mat &mat ,unsigned int* val)           //assign the RGB valu
 	for (int i = 0; i < mat.rows; i++) {
 		for (int j = 0; j < mat.cols; j++) {
 			pixel=val[k]/4;                    // 2^10 >> 255  , so value/4 
-			Vec4b& rgba = mat.at<Vec4b>(i, j);
+			Vec3b& rgba = mat.at<Vec3b>(i, j);
 			rgba[0] = pixel;
 			rgba[1] = pixel;
 			rgba[2] = pixel;
-			rgba[3] = 255;
+//			rgba[3] = 255;
 			k++;
 		}
 	}
