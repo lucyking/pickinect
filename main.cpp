@@ -4,6 +4,7 @@
 #include <sys/sysinfo.h>
 #include <unistd.h>
 #define SIZE 385024
+#include <math.h>
 
 
 int i,j;
@@ -26,7 +27,7 @@ int main( int argc, char** argv )
 	unsigned int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
 
 	FILE *camera;//*fo;                               //fo is used to store the raw Y10B data,if you need the raw Y10B data,uncomment the codes about fo
-	camera=fopen("/dev/video0", "rb");
+	camera=fopen("/dev/video1", "rb");
 	Mat mat(480, 640, CV_8UC3);                       //  cv::Mat to store RGB picture
 
 
@@ -76,7 +77,11 @@ int main( int argc, char** argv )
 		createAlphaMat(mat,raw);                    // write the RGB picture to the filesystem
 //		putText(mat, "kkk", Point(min_y, min_x), 1, 0.5, Scalar::all(255), 1, 7, true);
 		sprintf(uptimeInfo,"<%d,%d>",min_y,min_x);
-		putText(mat, uptimeInfo, Point(min_y-50, min_x+15), 1, 2, Scalar::all(50), 1, 2, false);
+		putText(mat, uptimeInfo, Point(min_y-50, min_x-5), 1, 2, Scalar::all(50), 1, 2, false);
+		unsigned int dis = 12.36 * tan(min_depth / 2842.5 + 1.1863);
+		sprintf(uptimeInfo,">%d(cm)",dis);
+		putText(mat, uptimeInfo, Point(min_y-50, min_x+25), 1, 2, Scalar::all(50), 1, 2, false);
+
 		vector<int> compression_params;
 		compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 		compression_params.push_back(10);

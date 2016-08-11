@@ -1,5 +1,5 @@
 USER	:= $(shell whoami)
-DEBUG   := y
+DEBUG   := n
 UNAME	:= $(shell uname -m)
 obj-m	:= gspca.o kinect.o  
 KERNELDIR ?= /lib/modules/$(shell uname -r)/build
@@ -26,18 +26,18 @@ default:
 arm:
 	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS) -C $(ARMKDIR) M=$(PWD) modules
 
-unload_drivers:
+unload:
 	sudo sh unload_drivers.sh
 
-reload_video_drivers:
+reload:
 	make unload_drivers
-	sudo modprobe gspca_main
-	sudo modprobe gspca_kinect
+	sudo modprobe gspca_main --force-modversion
+	sudo modprobe gspca_kinect --force-modversion
 
 load:	
 	make unload_drivers
 	sudo modprobe videodev
-	sudo insmod gspca.ko
+	sudo insmod gspca.ko 
 	sudo insmod kinect.ko
 	sudo chown -f -R $(USER):$(USER) /dev/video* 
 	sudo chmod -f 755 /dev/video*

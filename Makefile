@@ -3,4 +3,5 @@ main:main.cpp
 	g++ `pkg-config --cflags opencv` -o main main.cpp `pkg-config --libs opencv`
 
 clean:
-	rm *.png main 
+	rm main 
+	mv *.png /home/lucyking/Pictures/  
