@@ -32,6 +32,7 @@ int main( int argc, char** argv )
 
 
 	while(1){                                         //infinite loop to get depth frames from kinect
+		//sleep(3);
 
 		sysinfo(&sys_info);                       //use uptime strings as picture name
 		unsigned long uptime = sys_info.uptime;
@@ -76,11 +77,24 @@ int main( int argc, char** argv )
 
 		createAlphaMat(mat,raw);                    // write the RGB picture to the filesystem
 //		putText(mat, "kkk", Point(min_y, min_x), 1, 0.5, Scalar::all(255), 1, 7, true);
-		sprintf(uptimeInfo,"<%d,%d>",min_y,min_x);
-		putText(mat, uptimeInfo, Point(min_y-50, min_x-5), 1, 2, Scalar::all(50), 1, 2, false);
+		unsigned int dis = 12.36 * tan(min_depth / 2842.5 + 1.1863);
+		sprintf(uptimeInfo,"<%d,%d>::%d (cm)",min_y,min_x,dis);
+
+		/* stastic tag*/
+		putText(mat, uptimeInfo, Point(5, 480-10), 1, 2, Scalar::all(50), 1, 2, false);
+
+		/* domatic tag
+		if(min_y<320)
+			putText(mat, uptimeInfo, Point(min_y-50, min_x-5), 1, 2, Scalar::all(50), 1, 2, false);
+		else
+			putText(mat, uptimeInfo, Point(min_y-450, min_x-5), 1, 2, Scalar::all(50), 1, 2, false);
+		*/
+
+		/*
 		unsigned int dis = 12.36 * tan(min_depth / 2842.5 + 1.1863);
 		sprintf(uptimeInfo,">%d(cm)",dis);
 		putText(mat, uptimeInfo, Point(min_y-50, min_x+25), 1, 2, Scalar::all(50), 1, 2, false);
+		*/
 
 		vector<int> compression_params;
 		compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
