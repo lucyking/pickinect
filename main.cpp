@@ -27,7 +27,7 @@ int main( int argc, char** argv )
 	unsigned int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
 
 	FILE *camera;//*fo;                               //fo is used to store the raw Y10B data,if you need the raw Y10B data,uncomment the codes about fo
-	camera=fopen("/dev/video1", "rb");
+	camera=fopen("/dev/video0", "rb");
 	Mat mat(480, 640, CV_8UC3);                       //  cv::Mat to store RGB picture
 
 
