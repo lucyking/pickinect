@@ -29,12 +29,14 @@ arm:
 unload:
 	sudo sh unload_drivers.sh
 	@echo `lsmod | grep kinect || true` 
+	@echo `ls /dev | grep video`
 
 reload:
 	make unload_drivers
 	sudo modprobe gspca_main --force-modversion
 	sudo modprobe gspca_kinect --force-modversion
 	@echo `lsmod | grep kinect || true` 
+	@echo `ls /dev | grep video`
 
 load:	
 	make unload_drivers
@@ -44,6 +46,7 @@ load:
 	sudo chown -f -R $(USER):$(USER) /dev/video* 
 	sudo chmod -f 755 /dev/video*
 	@echo `lsmod | grep kinect || true` 
+	@echo `ls /dev | grep video`
 
 show_loaded:
 	@echo `lsmod | grep kinect || true` 
