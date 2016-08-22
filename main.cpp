@@ -90,12 +90,6 @@ int main( int argc, char** argv )
 			putText(mat, uptimeInfo, Point(min_y-450, min_x-5), 1, 2, Scalar::all(50), 1, 2, false);
 		*/
 
-		/*
-		unsigned int dis = 12.36 * tan(min_depth / 2842.5 + 1.1863);
-		sprintf(uptimeInfo,">%d(cm)",dis);
-		putText(mat, uptimeInfo, Point(min_y-50, min_x+25), 1, 2, Scalar::all(50), 1, 2, false);
-		*/
-
 		vector<int> compression_params;
 		compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
 		compression_params.push_back(10);
