@@ -46,6 +46,16 @@ int main( int argc, char** argv )
 		//   fclose(fo);
 
 		get_raw(raw,data);                         // trans Y10B to RGB
+		for(i=0;i<640;i++){
+			for(j=640*480-1;j>0;j=j-640){
+				if(j>=640*480-1)
+					continue;
+				if(abs(raw[j]-raw[j-640])>100) {
+					raw[j] = 0;
+					break;
+				}
+			}
+		}
 
 
 		min_depth=2047;                            // get the closest point
