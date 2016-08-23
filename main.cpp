@@ -23,7 +23,7 @@ unsigned int get_raw(unsigned int raw[],unsigned char tmp[]);   // calculate the
 int main( int argc, char** argv )
 {
 
-	unsigned char data[SIZE];                               //date store the Y10B raw data 
+	unsigned char data[SIZE];                               //date store the Y10B raw data
 	unsigned int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
 
 	FILE *camera;//*fo;                               //fo is used to store the raw Y10B data,if you need the raw Y10B data,uncomment the codes about fo
@@ -39,9 +39,9 @@ int main( int argc, char** argv )
 		sprintf(uptimeInfo, "%ld", uptime);
 
 		//	fo=fopen(uptimeInfo,"wb");           //fo is used to record the raw depth data from kinect
-		
+
 		fread(data, sizeof(data[0]), SIZE, camera);  // read raw Y10B data from kinect
-		
+
 		//   fwrite(data, sizeof(data[0]), SIZE, fo);
 		//   fclose(fo);
 
@@ -73,7 +73,7 @@ int main( int argc, char** argv )
 		}
 
 
-		printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth); 
+		printf("%s>[%d,%d]:%d\n",uptimeInfo,min_x,min_y,min_depth);
 
 		createAlphaMat(mat,raw);                    // write the RGB picture to the filesystem
 //		putText(mat, "kkk", Point(min_y, min_x), 1, 0.5, Scalar::all(255), 1, 7, true);
@@ -116,7 +116,7 @@ void createAlphaMat(Mat &mat ,unsigned int* val)           //assign the RGB valu
 	unsigned int pixel;
 	for (int i = 0; i < mat.rows; i++) {
 		for (int j = 0; j < mat.cols; j++) {
-			pixel=val[k]/4;                    // 2^10 >> 255  , so value/4 
+			pixel=val[k]/4;                    // 2^10 >> 255  , so value/4
 			Vec3b& rgba = mat.at<Vec3b>(i, j);
 			rgba[0] = pixel;
 			rgba[1] = pixel;
