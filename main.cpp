@@ -47,10 +47,10 @@ int main( int argc, char** argv )
 
 		get_raw(raw,data);                         // trans Y10B to RGB
 		for(i=0;i<640;i++){
-			for(j=640*480-1;j>0;j=j-640){
-				if(j>=640*480-1)
+			for(j=640*480-640*5+i;j>0;j=j-640){
+				if(j>=640*480-640*5)
 					continue;
-				if(abs(raw[j]-raw[j-640])>100) {
+				if(abs(raw[j]-raw[j-640])>50) {
 					raw[j] = 0;
 					break;
 				}
