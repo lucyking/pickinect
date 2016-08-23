@@ -58,9 +58,10 @@ int main( int argc, char** argv )
 		}
 
 
-		min_depth=2047;                            // get the closest point
-		min_x=0,min_y=0;
-		for(i=0+640*5+5;i<640*480-640;i++){
+		min_depth = 2047;                            // get the closest point
+		min_x = 0, min_y = 0;
+
+		for(i=0+640*5+5;i<640*480-640;i++){          // draw the threshold line
 			if(raw[i]> 100 && raw[i]<min_depth){
 				min_depth=raw[i];
 				min_x=i/640;
