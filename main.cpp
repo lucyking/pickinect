@@ -5,6 +5,7 @@
 #include <unistd.h>
 #define SIZE 385024
 #include <math.h>
+#include <stdlib.h>
 
 
 int i,j;
@@ -16,18 +17,18 @@ struct sysinfo sys_info;
 char uptimeInfo[15];
 unsigned long uptime;
 
-void createAlphaMat(Mat &mat ,unsigned int* val);
-unsigned int get_raw(unsigned int raw[],unsigned char tmp[]);   // calculate the raw Y10B value to RGB(black&&white)
+void createAlphaMat(Mat &mat ,int* val);
+unsigned int get_raw(int raw[],unsigned char tmp[]);   // calculate the raw Y10B value to RGB(black&&white)
 
 
 int main( int argc, char** argv )
 {
 
 	unsigned char data[SIZE];                               //date store the Y10B raw data
-	unsigned int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
+	int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
 
 	FILE *camera;//*fo;                               //fo is used to store the raw Y10B data,if you need the raw Y10B data,uncomment the codes about fo
-	camera=fopen("/dev/video0", "rb");
+	camera=fopen("/dev/video1", "rb");
 	Mat mat(480, 640, CV_8UC3);                       //  cv::Mat to store RGB picture
 
 
@@ -50,7 +51,9 @@ int main( int argc, char** argv )
 			for(j=640*480-640*5+i;j>0;j=j-640){
 				if(j>=640*480-640*5)
 					continue;
-				if(abs(raw[j]-raw[j-640])>50) {
+				if(fabs(raw[j]-raw[j-640])>50) {
+					printf(">>> <%d,%d>:%d-%d \n",j,j-640,raw[j],raw[j-640]);
+					printf(">>>[%d]\n",abs(raw[j]-raw[j-640]));
 					raw[j] = 0;
 					break;
 				}
@@ -116,7 +119,7 @@ int main( int argc, char** argv )
 
 
 
-void createAlphaMat(Mat &mat ,unsigned int* val)           //assign the RGB value to corresponding pixel of picture
+void createAlphaMat(Mat &mat ,int* val)           //assign the RGB value to corresponding pixel of picture
 {   int k=0+68+5;
 	unsigned int pixel;
 	for (int i = 0; i < mat.rows; i++) {
@@ -137,7 +140,7 @@ void createAlphaMat(Mat &mat ,unsigned int* val)           //assign the RGB valu
 
 
 
-unsigned int get_raw(unsigned int raw[],unsigned char tmp[]) {    // trans Y10B to RGB value
+unsigned int get_raw(int raw[],unsigned char tmp[]) {    // trans Y10B to RGB value
 
 	int k,index;
 	index=0;
