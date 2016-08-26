@@ -57,7 +57,7 @@ int main( int argc, char** argv )
 			for(j=640*480-640*5+i;j>640;j=j-640){
 				if(j>=640*480-640*5)
 					continue;
-				if(fabs(raw[j]-raw[j-640])>50) {
+				if(fabs(raw[j]-raw[j-640])>15) {
 					edge[raw[i]]=make_pair(j/640,j%640);
 					printf(">>> <%d,%d>:%d-%d \n",j,j-640,raw[j],raw[j-640]);
 					printf(">>>[%d]\n",abs(raw[j]-raw[j-640]));
