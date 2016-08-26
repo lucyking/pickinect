@@ -4,4 +4,4 @@ main:main.cpp
 
 clean:
 	rm main 
-	mv *.png /home/lucyking/Pictures/  
+	mv *.png ~/tmp/
