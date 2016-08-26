@@ -7,6 +7,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include <map>
+typedef std::map<int,std::pair<int,int> > EdgeInfo;
 
 int i,j;
 
@@ -23,6 +25,7 @@ unsigned int get_raw(int raw[],unsigned char tmp[]);   // calculate the raw Y10B
 
 int main( int argc, char** argv )
 {
+	EdgeInfo edge;
 
 	unsigned char data[SIZE];                               //date store the Y10B raw data
 	int raw[640*480],min_depth=2047,min_x,min_y;   //raw store the pixel data
@@ -48,10 +51,11 @@ int main( int argc, char** argv )
 
 		get_raw(raw,data);                         // trans Y10B to RGB
 		for(i=0;i<640;i++){
-			for(j=640*480-640*5+i;j>0;j=j-640){
+			for(j=640*480-640*5+i;j>640;j=j-640){
 				if(j>=640*480-640*5)
 					continue;
 				if(fabs(raw[j]-raw[j-640])>50) {
+					edge[raw[i]]=make_pair(j/640,j%640);
 					printf(">>> <%d,%d>:%d-%d \n",j,j-640,raw[j],raw[j-640]);
 					printf(">>>[%d]\n",abs(raw[j]-raw[j-640]));
 					raw[j] = 0;
@@ -59,6 +63,7 @@ int main( int argc, char** argv )
 				}
 			}
 		}
+		printf("<<map's size::%d \n>>",edge.size());
 
 
 		min_depth = 2047;                            // get the closest point
