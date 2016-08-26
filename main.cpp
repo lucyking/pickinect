@@ -49,6 +49,9 @@ int main( int argc, char** argv )
 		//   fwrite(data, sizeof(data[0]), SIZE, fo);
 		//   fclose(fo);
 
+		min_depth = 2047;                            // get the closest point
+		min_x = 0, min_y = 0;
+
 		get_raw(raw,data);                         // trans Y10B to RGB
 		for(i=0;i<640;i++){
 			for(j=640*480-640*5+i;j>640;j=j-640){
@@ -58,14 +61,21 @@ int main( int argc, char** argv )
 					edge[raw[i]]=make_pair(j/640,j%640);
 					printf(">>> <%d,%d>:%d-%d \n",j,j-640,raw[j],raw[j-640]);
 					printf(">>>[%d]\n",abs(raw[j]-raw[j-640]));
+
+					if(raw[j]>100 && raw[j]<min_depth){
+						min_depth=raw[j];
+						min_x=j/640;
+						min_y=j%640;
+					}
+
 					raw[j] = 0;
 					break;
 				}
 			}
 		}
-		printf("<<map's size::%d \n>>",edge.size());
+		printf("<<map's size::%ld \n>>",edge.size());
 
-
+/*
 		min_depth = 2047;                            // get the closest point
 		min_x = 0, min_y = 0;
 
@@ -76,7 +86,7 @@ int main( int argc, char** argv )
 				min_y=i%640;
 			}
 		}
-
+*/
 
 		int point = min_x*640+min_y;
 		for(i=0+640*5+5;i<640*480-640;i++){
