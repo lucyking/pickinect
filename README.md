@@ -1,5 +1,6 @@
 # pickinect
 get and recover the raw depth data from Kinect by librekinect + OpenCV
+![gif](resault.gif)
 
 ## about
 the binary will generate grey scale depth-image in the dir.
