@@ -1,5 +1,6 @@
 # pickinect
-get and recover the raw depth data from Kinect by librekinect + OpenCV
+Get and recover the raw depth data from Kinect by [librekinect](https://github.com/xxorde/librekinect) + [OpenCV](http://opencv.org/).   
+Assuming that you have installed opencv lib manually acoording your OS properly.
 ![gif](result.gif)
 
 
