@@ -4,7 +4,7 @@ get and recover the raw depth data from Kinect by librekinect + OpenCV
 
 
 ## load librekinect
-- cd ./src
+- cd ./pickinect/src
 - make
 - make unload
 - make load
